@@ -7,11 +7,12 @@ import org.bukkit.command.TabCompleter
 
 class Command : CommandExecutor, TabCompleter {
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
-        sender.sendMessage("コマンド動作確認メッセージ1")
         return true
     }
 
     override fun onTabComplete(commandSender: CommandSender, command: Command, label: String, args: Array<out String>): MutableList<String>? {
-        return null
+        return mutableListOf(
+            CommandConst.OPEN_COMMAND
+        )
     }
 }
