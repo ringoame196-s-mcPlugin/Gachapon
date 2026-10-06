@@ -62,15 +62,18 @@ jobs:
           import os
           import json
           import urllib.request
+          import urllib.error
+          import time
+          import sys
 
           api_key = os.environ.get("GEMINI_API_KEY")
           diff = os.environ.get("DIFF", "")
 
           if not api_key:
-              print("⚠️ GEMINI_API_KEY が設定されていません。")
+              sys.stderr.write("⚠️ GEMINI_API_KEY が設定されていません。\n")
               exit(0)
 
-          url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key={api_key}"
+          url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent"
           
           prompt = f"""
           あなたは親切で頼もしいシニア Kotlin エンジニアです。
@@ -91,21 +94,43 @@ jobs:
               "contents": [{"parts": [{"text": prompt}]}]
           }
 
-          headers = {"Content-Type": "application/json"}
-          req = urllib.request.Request(url, data=json.dumps(payload).encode('utf-8'), headers=headers, method='POST')
+          headers = {
+              "Content-Type": "application/json",
+              "x-goog-api-key": api_key
+          }
 
-          try:
-              with urllib.request.urlopen(req) as res:
-                  data = json.loads(res.read().decode('utf-8'))
-                  review_text = data['candidates'][0]['content']['parts'][0]['text']
-                  print("### 🤖 Gemini AI ひとくちレビュー\n\n" + review_text)
-          except Exception as e:
-              print(f"レビューの生成に失敗しました: {e}")
+          max_retries = 3
+          for attempt in range(max_retries):
+              try:
+                  req = urllib.request.Request(
+                      url,
+                      data=json.dumps(payload).encode('utf-8'),
+                      headers=headers,
+                      method='POST'
+                  )
+                  with urllib.request.urlopen(req) as res:
+                      data = json.loads(res.read().decode('utf-8'))
+                      review_text = data['candidates'][0]['content']['parts'][0]['text']
+                      print("### 🤖 Gemini AI ひとくちレビュー\n\n" + review_text)
+                      break
+              except urllib.error.HTTPError as e:
+                  sys.stderr.write(f"HTTP Error {e.code}: {e.reason}\n")
+                  if e.code in [503, 429] and attempt < max_retries - 1:
+                      sys.stderr.write(f"5秒後に再試行します... ({attempt + 1}/{max_retries})\n")
+                      time.sleep(5)
+                  else:
+                      sys.stderr.write("レビュー生成をスキップしました。\n")
+                      break
+              except Exception as e:
+                  sys.stderr.write(f"予期せぬエラー: {e}\n")
+                  break
           EOF
 
-          # 3. 生成されたレビューを PR にコメント投稿
-          if [ -s review.txt ]; then
+          # 3. 正常にレビューテキストが生成された場合（🤖が含まれる場合）のみコメント投稿
+          if grep -q "🤖 Gemini AI ひとくちレビュー" review.txt; then
             gh pr comment $PR_NUMBER --body-file review.txt
+          else
+            echo "有効なレビュー文面が生成されなかったため、PRコメントの投稿をスキップしました。"
           fi
 
       # --- 🚀 Auto Merge (Rebase) ---
