@@ -11,16 +11,15 @@ class Main : JavaPlugin() {
         super.onEnable()
 		
         registerEvents()
-        // registerCommands()
+        registerCommands()
     }
 	
     private fun registerEvents() {
         server.pluginManager.registerEvents(Events(), plugin)
     }
-	
-    @Suppress("UnusedPrivateMember")
+
     private fun registerCommands() {
-        val command = getCommand("command")
+        val command = getCommand("gachapon")
         command?.setExecutor(Command())
     }
 }

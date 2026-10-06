@@ -59,27 +59,22 @@ configure<BukkitPluginDescription> {
     apiVersion = "1." + mcVersion.split(".")[1]
     author = "ringoame196_s_mcPlugin"
     website = "https://github.com/ringoame196-s-mcPlugin/Gachapon"
-    /*
-    コマンド追加用
+
     commands {
-        register("test") {
-            description = "This is a test command!"
-            aliases = listOf("t")
-            permission = "testplugin.test"
-            usage = "Just run the command!"
+        register("gachapon") {
+            description = "Gachapon's Command"
+            permission = "gachapon.admin"
+            usage = "/gachapon"
         }
     }
-    */
 
-    /*
-    パーミッション追加用
+
     permissions {
-        register("test.test") {
+        register("gachapon.admin") {
             description = "This is a test permission!"
             default = BukkitPluginDescription.Permission.Default.OP
         }
     }
-    */
 }
 
 tasks.withType<ShadowJar> {
