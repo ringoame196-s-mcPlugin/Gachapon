@@ -73,7 +73,7 @@ jobs:
               sys.stderr.write("⚠️ GEMINI_API_KEY が設定されていません。\n")
               exit(0)
 
-          url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent"
+          url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key={api_key}"
           
           prompt = f"""
           あなたは親切で頼もしいシニア Kotlin エンジニアです。
@@ -95,8 +95,7 @@ jobs:
           }
 
           headers = {
-              "Content-Type": "application/json",
-              "x-goog-api-key": api_key
+              "Content-Type": "application/json"
           }
 
           max_retries = 3
@@ -116,8 +115,9 @@ jobs:
               except urllib.error.HTTPError as e:
                   sys.stderr.write(f"HTTP Error {e.code}: {e.reason}\n")
                   if e.code in [503, 429] and attempt < max_retries - 1:
-                      sys.stderr.write(f"5秒後に再試行します... ({attempt + 1}/{max_retries})\n")
-                      time.sleep(5)
+                      wait_time = (attempt + 1) * 10
+                      sys.stderr.write(f"{wait_time}秒後に再試行します... ({attempt + 1}/{max_retries})\n")
+                      time.sleep(wait_time)
                   else:
                       sys.stderr.write("レビュー生成をスキップしました。\n")
                       break
