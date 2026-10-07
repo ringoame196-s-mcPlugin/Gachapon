@@ -20,7 +20,7 @@ object GachaponManager {
 
     @Suppress("UnusedPrivateMember")
     fun removeGachapon(block: Block) {
-        gachaponList.add(block.location)
+        gachaponList.remove(block.location)
     }
 
     @Suppress("UnusedPrivateMember")
