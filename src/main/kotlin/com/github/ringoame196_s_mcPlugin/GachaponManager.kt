@@ -23,7 +23,6 @@ object GachaponManager {
         gachaponList.remove(block.location)
     }
 
-    @Suppress("UnusedPrivateMember")
     fun isGachapon(block: Block): Boolean {
         return gachaponList.contains(block.location)
     }
