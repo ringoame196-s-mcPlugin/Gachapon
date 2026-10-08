@@ -7,7 +7,7 @@ import com.github.ringoame196_s_mcPlugin.getTargetBlockOrNull
 import org.bukkit.command.CommandSender
 
 class OpenSubCommand : SubCommand {
-    override val name: String = CommandConst.REMOVE_COMMAND
+    override val name: String = CommandConst.OPEN_COMMAND
     override fun execute(sender: CommandSender, args: Array<out String>) {
         val player = sender.asPlayerOrNull() ?: return
         val targetBlock = player.getTargetBlockOrNull() ?: return
