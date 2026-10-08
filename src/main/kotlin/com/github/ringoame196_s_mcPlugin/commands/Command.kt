@@ -70,17 +70,15 @@ class Command : CommandExecutor, TabCompleter {
         command: Command,
         label: String,
         args: Array<out String>
-    ): MutableList<String> {
+    ): List<String> {
         if (args.size == 1) {
             val subCommands = listOf(
                 CommandConst.ADD_COMMAND,
                 CommandConst.REMOVE_COMMAND,
                 CommandConst.OPEN_COMMAND
             )
-            return subCommands
-                .filter { it.startsWith(args[0], ignoreCase = true) }
-                .toMutableList()
+            return subCommands.filter { it.startsWith(args[0], ignoreCase = true) }
         }
-        return mutableListOf()
+        return emptyList()
     }
 }
