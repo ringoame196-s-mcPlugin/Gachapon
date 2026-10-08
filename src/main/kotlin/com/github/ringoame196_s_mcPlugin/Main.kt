@@ -1,6 +1,6 @@
 package com.github.ringoame196_s_mcPlugin
 
-import com.github.ringoame196_s_mcPlugin.commands.Command
+import com.github.ringoame196_s_mcPlugin.commands.GachaponCommand
 import com.github.ringoame196_s_mcPlugin.events.Events
 import org.bukkit.plugin.java.JavaPlugin
 
@@ -20,6 +20,6 @@ class Main : JavaPlugin() {
 
     private fun registerCommands() {
         val command = getCommand("gachapon")
-        command?.setExecutor(Command())
+        command?.setExecutor(GachaponCommand())
     }
 }
