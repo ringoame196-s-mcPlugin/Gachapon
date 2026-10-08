@@ -6,9 +6,9 @@ import com.github.ringoame196_s_mcPlugin.commands.subCommands.RemoveSubCommand
 import com.github.ringoame196_s_mcPlugin.commands.subCommands.SubCommand
 
 class GachaponCommand : BaseCommand() {
-    override val subCommands: Map<String, SubCommand> = mapOf(
-        CommandConst.ADD_COMMAND to AddSubCommand(),
-        CommandConst.REMOVE_COMMAND to RemoveSubCommand(),
-        CommandConst.OPEN_COMMAND to OpenSubCommand()
-    )
+    override val subCommands: Map<String, SubCommand> = listOf(
+        AddSubCommand(),
+        RemoveSubCommand(),
+        OpenSubCommand()
+    ).associateBy { it.name }
 }
