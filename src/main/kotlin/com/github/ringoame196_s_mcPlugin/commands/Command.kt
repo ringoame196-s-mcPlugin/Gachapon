@@ -1,57 +1,86 @@
 package com.github.ringoame196_s_mcPlugin.commands
 
 import com.github.ringoame196_s_mcPlugin.GachaponManager
+import com.github.ringoame196_s_mcPlugin.asPlayerOrNull
+import com.github.ringoame196_s_mcPlugin.getTargetBlockOrNull
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
 import org.bukkit.command.TabCompleter
-import org.bukkit.entity.Player
 
 class Command : CommandExecutor, TabCompleter {
-    override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
-        if (args.isEmpty()) return false
-        val subCommand = args[0]
+    override fun onCommand(
+        sender: CommandSender,
+        command: Command,
+        label: String,
+        args: Array<out String>
+    ): Boolean {
+        val subCommand = args.firstOrNull() ?: return false
 
         when (subCommand) {
             CommandConst.ADD_COMMAND -> addCommand(sender)
+            CommandConst.REMOVE_COMMAND -> removeCommand(sender)
+            CommandConst.OPEN_COMMAND -> openCommand(sender)
+            else -> return false
         }
 
         return true
     }
 
     private fun addCommand(sender: CommandSender) {
-        if (sender !is Player) {
-            val message = "このコマンドはプレイヤーのみ実行可能です"
-            sender.sendMessage(message)
-            return
-        }
-
-        val targetBlock = GachaponManager.getTargetBlock(sender)
-
-        if (targetBlock == null) {
-            val message = "ブロックが指定されていません"
-            sender.sendMessage(message)
-            return
-        }
+        val player = sender.asPlayerOrNull() ?: return
+        val targetBlock = player.getTargetBlockOrNull() ?: return
 
         if (GachaponManager.isGachapon(targetBlock)) {
-            val message = "既に登録されています"
-            sender.sendMessage(message)
+            player.sendMessage("既に登録されています")
             return
         }
-        GachaponManager.addGachapon(targetBlock)
 
-        val message = "登録しました"
-        sender.sendMessage(message)
+        GachaponManager.addGachapon(targetBlock)
+        player.sendMessage("登録しました")
     }
 
-    override fun onTabComplete(commandSender: CommandSender, command: Command, label: String, args: Array<out String>): MutableList<String>? {
-        return when (args.size) {
-            1 -> mutableListOf(
-                CommandConst.ADD_COMMAND,
-                CommandConst.REMOVE_COMMAND
-            )
-            else -> mutableListOf()
+    private fun removeCommand(sender: CommandSender) {
+        val player = sender.asPlayerOrNull() ?: return
+        val targetBlock = player.getTargetBlockOrNull() ?: return
+
+        if (!GachaponManager.isGachapon(targetBlock)) {
+            player.sendMessage("登録されていません")
+            return
         }
+
+        GachaponManager.removeGachapon(targetBlock)
+        player.sendMessage("削除しました")
+    }
+
+    private fun openCommand(sender: CommandSender) {
+        val player = sender.asPlayerOrNull() ?: return
+        val targetBlock = player.getTargetBlockOrNull() ?: return
+
+        if (!GachaponManager.isGachapon(targetBlock)) {
+            player.sendMessage("ガチャのブロックのみ閲覧可能です")
+            return
+        }
+
+        player.openInventory(targetBlock.inventory)
+    }
+
+    override fun onTabComplete(
+        sender: CommandSender,
+        command: Command,
+        label: String,
+        args: Array<out String>
+    ): MutableList<String> {
+        if (args.size == 1) {
+            val subCommands = listOf(
+                CommandConst.ADD_COMMAND,
+                CommandConst.REMOVE_COMMAND,
+                CommandConst.OPEN_COMMAND
+            )
+            return subCommands
+                .filter { it.startsWith(args[0], ignoreCase = true) }
+                .toMutableList()
+        }
+        return mutableListOf()
     }
 }
