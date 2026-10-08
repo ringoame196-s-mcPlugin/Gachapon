@@ -1,7 +1,6 @@
 package com.github.ringoame196_s_mcPlugin
 
 import org.bukkit.Location
-import org.bukkit.block.Block
 import org.bukkit.block.Container
 import org.bukkit.entity.Player
 
@@ -9,21 +8,20 @@ object GachaponManager {
     private const val MAX_TARGET_BLOCK_DISTANCE = 10
     private val gachaponList = mutableListOf<Location>()
 
-    fun getTargetBlock(player: Player): Block? {
+    fun getTargetBlock(player: Player): Container? {
         val targetBlock = player.getTargetBlockExact(MAX_TARGET_BLOCK_DISTANCE) ?: return null
-        return if (targetBlock.state is Container) targetBlock else null
+        return targetBlock.state as? Container
     }
 
-    fun addGachapon(block: Block) {
+    fun addGachapon(block: Container) {
         gachaponList.add(block.location)
     }
 
-    @Suppress("UnusedPrivateMember")
-    fun removeGachapon(block: Block) {
+    fun removeGachapon(block: Container) {
         gachaponList.remove(block.location)
     }
 
-    fun isGachapon(block: Block): Boolean {
+    fun isGachapon(block: Container): Boolean {
         return gachaponList.contains(block.location)
     }
 }
