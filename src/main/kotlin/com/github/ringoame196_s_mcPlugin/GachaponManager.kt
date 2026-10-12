@@ -28,7 +28,7 @@ object GachaponManager {
     }
 
     fun isGachapon(block: Container): Boolean {
-        return gachaponMap.keys.contains(block.location)
+        return block.location in gachaponMap
     }
 
     fun getGachaponData(block: Container): GachaponData? {
