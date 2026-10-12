@@ -19,7 +19,6 @@ object GachaponManager {
     fun addGachapon(block: Container) {
         gachaponMap[block.location] = GachaponData(
             block,
-            null,
             null
         )
     }

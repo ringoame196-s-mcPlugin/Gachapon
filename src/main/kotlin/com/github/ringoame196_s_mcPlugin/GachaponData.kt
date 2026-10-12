@@ -5,6 +5,5 @@ import org.bukkit.inventory.ItemStack
 
 data class GachaponData(
     val block: Container,
-    var consumableItem: ItemStack?,
-    val consumableAmmon: Int?
+    var consumableItem: ItemStack?
 )
