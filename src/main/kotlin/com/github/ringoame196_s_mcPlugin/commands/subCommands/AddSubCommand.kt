@@ -17,7 +17,6 @@ class AddSubCommand : SubCommand {
             return
         }
 
-        GachaponManager.addGachapon(targetBlock)
-        player.sendMessage("登録しました")
+        GachaponManager.openGachaponSetInventory(player, targetBlock)
     }
 }
