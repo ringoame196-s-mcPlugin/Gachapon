@@ -2,7 +2,6 @@ package com.github.ringoame196_s_mcPlugin
 
 import org.bukkit.Bukkit
 import org.bukkit.Location
-import org.bukkit.Material
 import org.bukkit.block.Container
 import org.bukkit.entity.Player
 import org.bukkit.inventory.Inventory
@@ -48,20 +47,11 @@ object GachaponManager {
 
     fun openGachaponSetInventory(player: Player, block: Container) {
         val gui = Bukkit.createInventory(null, SET_GUI_SIZE, SET_GUI_TITLE)
-        val noCLickItem = makeNoClickItem()
         for (i in 0 until SET_GUI_SIZE) {
             if (i == SET_GUI_SIZE / 2) continue
-            gui.setItem(i, noCLickItem)
+            gui.setItem(i, GachaponItems.NO_CLICK_ITEM)
         }
         player.openInventory(gui)
         setInventory[gui] = block
-    }
-
-    private fun makeNoClickItem(): ItemStack {
-        val item = ItemStack(Material.BARRIER)
-        val meta = item.itemMeta
-        meta.setDisplayName(" ")
-        item.setItemMeta(meta)
-        return item
     }
 }

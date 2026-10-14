@@ -36,6 +36,16 @@ class Events : Listener {
     }
 
     @EventHandler
+    fun onInventoryClick(e: InventoryClickEvent) {
+        val clickInventory = e.clickedInventory ?: return
+        if (clickInventory !in GachaponManager.setInventory) return
+        val item = e.currentItem ?: return
+        if (item == GachaponItems.NO_CLICK_ITEM) {
+            e.isCancelled = true
+        }
+    }
+
+    @EventHandler
     fun onInventoryClose(e: InventoryCloseEvent) {
         val player = e.player
         val inv = e.inventory
