@@ -1,11 +1,13 @@
 package com.github.ringoame196_s_mcPlugin.events
 
 import com.github.ringoame196_s_mcPlugin.GachaponData
+import com.github.ringoame196_s_mcPlugin.GachaponItems
 import com.github.ringoame196_s_mcPlugin.GachaponManager
 import org.bukkit.block.Container
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.block.Action
+import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.inventory.EquipmentSlot
@@ -52,6 +54,9 @@ class Events : Listener {
         val item = inv.getItem(inv.size / 2)
         val targetBlock = GachaponManager.setInventory[inv] ?: return
         GachaponManager.addGachapon(targetBlock, item)
+        if (item != null) {
+            player.inventory.addItem(item)
+        }
         player.sendMessage("登録しました")
     }
 }
