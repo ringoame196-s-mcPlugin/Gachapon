@@ -1,9 +1,11 @@
 package com.github.ringoame196_s_mcPlugin.events
 
 import com.github.ringoame196_s_mcPlugin.GachaponData
-import com.github.ringoame196_s_mcPlugin.GachaponItems
+import com.github.ringoame196_s_mcPlugin.GachaponItemId
 import com.github.ringoame196_s_mcPlugin.GachaponManager
+import com.github.ringoame196_s_mcPlugin.gachapon
 import org.bukkit.block.Container
+import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.block.Action
@@ -42,21 +44,39 @@ class Events : Listener {
         val clickInventory = e.clickedInventory ?: return
         if (clickInventory !in GachaponManager.setInventory) return
         val item = e.currentItem ?: return
-        if (item == GachaponItems.NO_CLICK_ITEM) {
-            e.isCancelled = true
+        val gachaponId = item.itemMeta.gachapon.id ?: return
+        when (gachaponId) {
+            GachaponItemId.NO_CLICK_ITEM -> e.isCancelled = true
         }
     }
 
     @EventHandler
     fun onInventoryClose(e: InventoryCloseEvent) {
-        val player = e.player
+        val player = e.player as? Player ?: return
         val inv = e.inventory
         val item = inv.getItem(inv.size / 2)
         val targetBlock = GachaponManager.setInventory[inv] ?: return
-        GachaponManager.addGachapon(targetBlock, item)
+        GachaponManager.setGachapon(targetBlock, item)
         if (item != null) {
             player.inventory.addItem(item)
         }
-        player.sendMessage("登録しました")
+
+        sendSetGachaponMessage(player, item)
+    }
+
+    private fun sendSetGachaponMessage(player: Player, item: ItemStack?) {
+        player.sendMessage("ガチャガチャ登録しました")
+        val message: String
+        if (item == null) {
+            message = "消費アイテム:未設定"
+        } else {
+            val itemInfo: String = if (item.itemMeta.hasDisplayName()) {
+                item.itemMeta.displayName
+            } else {
+                item.type.name
+            }
+            message = "消費アイテム:$itemInfo 個数:${item.amount}"
+        }
+        player.sendMessage(message)
     }
 }
