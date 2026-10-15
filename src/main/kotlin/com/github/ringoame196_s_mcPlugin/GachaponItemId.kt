@@ -5,8 +5,7 @@ enum class GachaponItemId(val id: String) {
 
     companion object {
         fun fromId(id: String?): GachaponItemId? {
-            if (id == null) return null
-            return values().find { it.id == id }
+            return id?.let { targetId -> values().find { it.id == targetId } }
         }
     }
 }
