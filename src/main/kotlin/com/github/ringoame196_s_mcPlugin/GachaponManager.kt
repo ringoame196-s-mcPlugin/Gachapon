@@ -21,7 +21,7 @@ object GachaponManager {
         return targetBlock.state as? Container
     }
 
-    fun addGachapon(block: Container, consumableItem: ItemStack?) {
+    fun setGachapon(block: Container, consumableItem: ItemStack?) {
         gachaponMap[block.location] = GachaponData(
             block,
             consumableItem
