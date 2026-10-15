@@ -1,8 +1,9 @@
 package com.github.ringoame196_s_mcPlugin.events
 
 import com.github.ringoame196_s_mcPlugin.GachaponData
-import com.github.ringoame196_s_mcPlugin.GachaponItems
+import com.github.ringoame196_s_mcPlugin.GachaponItemId
 import com.github.ringoame196_s_mcPlugin.GachaponManager
+import com.github.ringoame196_s_mcPlugin.gachapon
 import org.bukkit.block.Container
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
@@ -43,8 +44,9 @@ class Events : Listener {
         val clickInventory = e.clickedInventory ?: return
         if (clickInventory !in GachaponManager.setInventory) return
         val item = e.currentItem ?: return
-        if (item == GachaponItems.NO_CLICK_ITEM) {
-            e.isCancelled = true
+        val gachaponId = item.itemMeta.gachapon.id ?: return
+        when (gachaponId) {
+            GachaponItemId.NO_CLICK_ITEM -> e.isCancelled = true
         }
     }
 

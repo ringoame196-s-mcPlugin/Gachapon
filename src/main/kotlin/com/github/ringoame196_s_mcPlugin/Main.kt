@@ -5,9 +5,14 @@ import com.github.ringoame196_s_mcPlugin.events.Events
 import org.bukkit.plugin.java.JavaPlugin
 
 class Main : JavaPlugin() {
-    private val plugin = this
-	
+    companion object {
+        // 外部クラスから Main.plugin でアクセスできるようにする
+        lateinit var plugin: Main
+            private set
+    }
+
     override fun onEnable() {
+        plugin = this
         super.onEnable()
 		
         registerEvents()
