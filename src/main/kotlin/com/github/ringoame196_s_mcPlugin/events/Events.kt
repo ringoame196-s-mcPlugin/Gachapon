@@ -1,6 +1,5 @@
 package com.github.ringoame196_s_mcPlugin.events
 
-import com.github.ringoame196_s_mcPlugin.GachaponData
 import com.github.ringoame196_s_mcPlugin.GachaponItemId
 import com.github.ringoame196_s_mcPlugin.GachaponManager
 import com.github.ringoame196_s_mcPlugin.gachapon
@@ -22,32 +21,30 @@ class Events : Listener {
         val player = e.player
         if (e.action != Action.RIGHT_CLICK_BLOCK) return
         if (e.hand != EquipmentSlot.HAND) return
-        val item = player.inventory.itemInMainHand
         val gachaponData = GachaponManager.getGachaponData(block) ?: return
         e.isCancelled = true
-
-        if (canExecute(item, gachaponData)) {
-            GachaponManager.openGachaponInventory(player)
-        } else {
-            player.sendMessage("必要なアイテムがありません")
-        }
-    }
-
-    private fun canExecute(item: ItemStack?, gachaponData: GachaponData): Boolean {
-        val requiredItem = gachaponData.consumableItem ?: return true
-        if (item == null) return false
-        return item.isSimilar(requiredItem) && item.amount >= requiredItem.amount
+        GachaponManager.openGachaponInventory(player, gachaponData)
     }
 
     @EventHandler
     fun onInventoryClick(e: InventoryClickEvent) {
         val clickInventory = e.clickedInventory ?: return
-        if (clickInventory !in GachaponManager.setInventory) return
+        when (clickInventory) {
+            in GachaponManager.setInventory -> onSetGachaponInventory(e)
+            in GachaponManager.gachaponInventory -> onGachaponInventory(e)
+        }
+    }
+
+    private fun onSetGachaponInventory(e: InventoryClickEvent) {
         val item = e.currentItem ?: return
         val gachaponId = item.itemMeta.gachapon.id ?: return
-        when (gachaponId) {
-            GachaponItemId.NO_CLICK_ITEM -> e.isCancelled = true
+        if (gachaponId == GachaponItemId.NO_CLICK_ITEM) {
+            e.isCancelled = true
         }
+    }
+
+    private fun onGachaponInventory(e: InventoryClickEvent) {
+        e.isCancelled = true
     }
 
     @EventHandler
