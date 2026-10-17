@@ -9,6 +9,7 @@ class Main : JavaPlugin() {
         // 外部クラスから Main.plugin でアクセスできるようにする
         lateinit var plugin: Main
             private set
+        const val ADMIN_PERMISSION = "gachapon.admin"
     }
 
     override fun onEnable() {
