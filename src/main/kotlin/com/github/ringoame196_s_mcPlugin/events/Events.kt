@@ -20,6 +20,12 @@ class Events : Listener {
         if (e.hand != EquipmentSlot.HAND) return
         val gachaponData = GachaponManager.getGachaponData(block) ?: return
         e.isCancelled = true
+
+        if (block.inventory.isEmpty) {
+            player.sendMessage("在庫がありません")
+            return
+        }
+
         val gachaponGUI = GachaponViewGUI(gachaponData)
         gachaponGUI.openGUI(player)
     }
