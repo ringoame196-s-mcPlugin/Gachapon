@@ -4,6 +4,7 @@ import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
+import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
 
@@ -35,5 +36,15 @@ class GachaponViewGUI(val gachaponData: GachaponData) : GachaponGUI {
 
     override fun handleClick(e: InventoryClickEvent) {
         e.isCancelled = true
+        val item = e.currentItem ?: return
+        val player = e.whoClicked as? Player ?: return
+        if (item.itemMeta.gachapon.id == GachaponItemId.SPIN_ITEM) {
+            GachaponManager.play(player, gachaponData, true)
+        }
+    }
+
+    override fun handleClose(e: InventoryCloseEvent) {
+        val inv = e.inventory
+        GachaponManager.gachaponGUI.remove(inv)
     }
 }
