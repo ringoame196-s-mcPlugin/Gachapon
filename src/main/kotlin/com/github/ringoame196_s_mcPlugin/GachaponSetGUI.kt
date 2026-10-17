@@ -56,16 +56,16 @@ class GachaponSetGUI(val block: Container) : GachaponGUI {
 
     private fun sendSetGachaponMessage(player: Player, item: ItemStack?) {
         player.sendMessage("ガチャガチャ登録しました")
-        val message: String
-        if (item == null) {
-            message = "消費アイテム:未設定"
+        val message = if (item == null) {
+            "消費アイテム:未設定"
         } else {
-            val itemInfo: String = if (item.itemMeta.hasDisplayName()) {
-                item.itemMeta.displayName
+            val itemMeta = item.itemMeta
+            val itemInfo = if (itemMeta?.hasDisplayName() == true) {
+                itemMeta.displayName
             } else {
                 item.type.name
             }
-            message = "消費アイテム:$itemInfo 個数:${item.amount}"
+            "消費アイテム:$itemInfo 個数:${item.amount}"
         }
         player.sendMessage(message)
     }
