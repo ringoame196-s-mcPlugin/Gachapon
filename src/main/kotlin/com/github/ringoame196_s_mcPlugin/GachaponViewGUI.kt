@@ -36,6 +36,11 @@ class GachaponViewGUI(val gachaponData: GachaponData) : GachaponGUI {
 
     override fun handleClick(e: InventoryClickEvent) {
         e.isCancelled = true
+        val item = e.currentItem ?: return
+        val player = e.whoClicked as? Player ?: return
+        if (item.itemMeta.gachapon.id == GachaponItemId.SPIN_ITEM) {
+            GachaponManager.play(player, gachaponData, true)
+        }
     }
 
     override fun handleClose(e: InventoryCloseEvent) {
