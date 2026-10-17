@@ -52,6 +52,7 @@ class GachaponSetGUI(val block: Container) : GachaponGUI {
         }
 
         sendSetGachaponMessage(player, item)
+        GachaponManager.gachaponGUI.remove(inv)
     }
 
     private fun sendSetGachaponMessage(player: Player, item: ItemStack?) {
