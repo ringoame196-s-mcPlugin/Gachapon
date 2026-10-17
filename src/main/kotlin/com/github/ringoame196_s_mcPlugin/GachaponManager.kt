@@ -88,15 +88,11 @@ object GachaponManager {
     private fun removeInventoryItem(player: Player, consumableItem: ItemStack?): Boolean {
         consumableItem ?: return true
         val requiredAmount = consumableItem.amount
-        var currentAmount = 0
 
-        for (item in player.inventory) {
-            if (item == null || item.type.isAir) continue
-
-            if (item.isSimilar(consumableItem)) {
-                currentAmount += item.amount
-            }
-        }
+        val currentAmount = player.inventory.contents
+            .filterNotNull()
+            .filter { it.isSimilar(consumableItem) }
+            .sumOf { it.amount }
 
         if (currentAmount < requiredAmount) {
             return false
